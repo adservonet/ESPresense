@@ -47,6 +47,7 @@
 #include "SensirionSCD4x.h"
 #include "TSL2561.h"
 #include "DS18B20.h"
+#include "M5Water.h"
 #endif
 
 TimerHandle_t reconnectTimer;
