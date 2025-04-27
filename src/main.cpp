@@ -511,15 +511,13 @@ void setup() {
     SPIFFS.begin(true);
     setupNetwork();
     Updater::Setup();
-#if NTP
-    setClock();
-#endif
     GUI::Setup(false);
     Motion::Setup();
     Switch::Setup();
     Button::Setup();
     Battery::Setup();
     CAN::Setup();
+    NTP::Setup();
 #ifdef SENSORS
     DHT::Setup();
     M5Water::Setup();
@@ -557,6 +555,7 @@ void loop() {
     Button::Loop();
     HttpWebServer::Loop();
     SerialImprov::Loop(false);
+    NTP::Loop();
 #if M5STICK
     AXP192::Loop();
 #endif
