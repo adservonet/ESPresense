@@ -680,6 +680,31 @@
             </label>
         </p>
         <h2>
+            <a href="https://espresense.com/configuration/settings#plant-watering" target="_blank">M5 Plant Watering Settings</a>
+        </h2>
+         <p>
+            <label>
+                Moisture sensor pin (-1 for disable):<br />
+                <input
+                    type="number"
+                    step="1"
+                    name="m5moisture_pin"
+                    placeholder={$extraSettings.defaults['m5moisture_pin']}
+                    bind:value={$extraSettings.values['m5moisture_pin']}/>
+            </label>
+        </p>
+        <p>
+            <label>
+                Pump pin pin (-1 for disable):<br />
+                <input
+                    type="number"
+                    step="1"
+                    name="m5pump_pin"
+                    placeholder={$extraSettings.defaults['m5pump_pin']}
+                    bind:value={$extraSettings.values['m5pump_pin']}/>
+            </label>
+        </p>
+        <h2>
             <a href="https://espresense.com/configuration/settings#i2c-settings" target="_blank">I2C Settings</a>
         </h2>
         <h4>Bus 1:</h4>
