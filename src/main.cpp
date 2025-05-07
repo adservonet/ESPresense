@@ -311,6 +311,8 @@ void onMqttMessage(const char *topic, const char *payload) {
             ;
         else if (Motion::Command(command, pay))
             ;
+        else if (M5Water::Command(command, pay))
+            ;
         else if (BleFingerprintCollection::Command(command, pay))
             changed = true;
         else if (Enrollment::Command(command, pay))

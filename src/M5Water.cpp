@@ -18,9 +18,10 @@ namespace M5Water
     int sensorInterval = 30000;
     int pumpInterval = 10000;
 
-    int minReading = 3000;
-    int maxReading = 1000;
+    int minReading = 1369;
+    int maxReading = 2182;
     int readingCount = 0;
+    bool pumpRunning = false;
 
     int rawADC;
     char info[30];
@@ -38,8 +39,11 @@ namespace M5Water
 
         if (M5WaterPreviousPumpMillis == 0 || millis() - M5WaterPreviousPumpMillis >= pumpInterval) {
             M5WaterPreviousPumpMillis = millis();
-            digitalWrite(outputPin, false);
-            pub((roomsTopic + "/pump").c_str(), 0, 1, "OFF");
+            if( pumpRunning ) {
+                pumpRunning = false;
+                digitalWrite(outputPin, false);
+                pub((roomsTopic + "/pump").c_str(), 0, 1, "OFF");
+            }
         }
 
         if (M5WaterPreviousSensorMillis == 0 || millis() - M5WaterPreviousSensorMillis >= sensorInterval) {
@@ -70,7 +74,8 @@ namespace M5Water
 
 
 
-            if( prettyValue < 25 ) {
+            if( prettyValue < 25 && !pumpRunning ) {
+                pumpRunning = true;
                 digitalWrite(outputPin, true);
                 pub((roomsTopic + "/pump").c_str(), 0, 1, "ON");
             }
@@ -105,11 +110,20 @@ namespace M5Water
 
     bool SendDiscovery()
     {
-        return sendSensorDiscovery("Moisture", EC_NONE, "moisture", "%") && sendSensorDiscovery("adc", EC_NONE, "number") && sendSensorDiscovery("pump", EC_NONE, "switch") && sendSensorDiscovery("adc_min", EC_NONE, "number") && sendSensorDiscovery("adc_max", EC_NONE, "number");
+        return sendSensorDiscovery("Moisture", EC_NONE, "moisture", "%") && sendSensorDiscovery("adc", EC_NONE, "number") && sendSensorDiscovery("pump", EC_NONE, "switch") && sendSensorDiscovery("adc_min", EC_NONE, "number") && sendSensorDiscovery("adc_max", EC_NONE, "number") && sendButtonDiscovery("Water", EC_CONFIG);
     }
 
     bool Command(String& command, String& pay)
     {
+        if (command == "water") {
+            if( !pumpRunning ) {
+                pumpRunning = true;
+                digitalWrite(outputPin, true);
+                pub((roomsTopic + "/pump").c_str(), 0, 1, "ON");
+            }
+//            HttpWebServer::SendState();
+            return true;
+        }
         return false;
     }
 
